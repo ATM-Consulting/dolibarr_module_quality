@@ -89,6 +89,8 @@ class modQuality extends DolibarrModules
 		//                        );
 		$this->module_parts = array(
 			'hooks'=>array('ofcard')
+			,'css'=>array('/quality/css/quality.css')
+			,'js'=>array('/quality/js/quality.js.php')
 			
 		);
 

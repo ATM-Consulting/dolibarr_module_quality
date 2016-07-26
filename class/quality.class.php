@@ -31,5 +31,20 @@ class TC_quality extends TObjetStd {
 		$this->active = 1;
 	}
 	
+	static function getAll(&$PDOdb) {
+		
+		$Tmp = $PDOdb->ExecuteAsArray("SELECT rowid FROM ".MAIN_DB_PREFIX."c_quality WHERE active = 1");
+		$Tab=array();
+		foreach($Tmp as &$row) {
+			
+			$c=new TC_quality;
+			$c->load($PDOdb, $row->rowid);
+			
+			$Tab[] = $c;
+			
+		}
+		
+		return $Tab;
+	}
 	
 }
