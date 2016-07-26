@@ -11,13 +11,24 @@ if(!defined('INC_FROM_DOLIBARR')) {
 }
 
 
-/* uncomment
-
-
-dol_include_once('/mymodule/class/xxx.class.php');
+dol_include_once('/quality/class/quality.class.php');
 
 $PDOdb=new TPDOdb;
 
-$o=new TXXX($db);
+$o=new TC_quality($db);
 $o->init_db_by_vars($PDOdb);
-*/
+
+$Tab = $PDOdb->ExecuteAsArray("SELECT * FROM ".MAIN_DB_PREFIX."c_quality");
+if(empty($Tab)) {
+	
+	$TInit = array('NORMAL'=>'Normal','ERROR'=>'Rebus', 'SURPROD'=>'Surproduction','OTHER'=>'Other');
+	foreach($TInit as $code=>$label) {
+		$o=new TC_quality;
+		$o->code = $code;
+		$o->label = $label;
+		$o->save($PDOdb);
+		
+	}
+	
+	
+}
