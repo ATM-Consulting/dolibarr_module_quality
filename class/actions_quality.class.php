@@ -66,13 +66,18 @@ class ActionsQuality
 		if (in_array('ofcard', explode(':', $parameters['context'])))
 		{
 		  	if($action == 'view') {
+		  		
+				global $langs;
+				
+				$langs->load('quality@quality');
+				
 		  		$line = &$parameters['line'];	
 				$of = &$parameters['of'];
 				
 				if($of->status == 'CLOSE') {
 					
 					if($line['qty_used'] != $line['qty']) {
-						$line['qty_used'].=' <a href="javascript:qualityDefineMotif('.$object->rowid.',\'TAssetOFLine\')" class="quality_define_link">Q</a>';
+						$line['qty_used'].=' <a title="'.$langs->trans('DefineQualityUsage').'" href="javascript:qualityDefineMotif('.$object->rowid.',\'TAssetOFLine\','.(float)$object->qty.')" class="classfortooltip quality_define_link">Q</a>';
 						
 						$this->results = $line;
 						
