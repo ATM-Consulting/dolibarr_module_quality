@@ -15,7 +15,7 @@ dol_include_once('/quality/class/quality.class.php');
 
 $PDOdb=new TPDOdb;
 
-$o=new TC_quality($db);
+$o=new TC_quality;
 $o->init_db_by_vars($PDOdb);
 
 $Tab = $PDOdb->ExecuteAsArray("SELECT * FROM ".MAIN_DB_PREFIX."c_quality");
@@ -32,3 +32,7 @@ if(empty($Tab)) {
 	
 	
 }
+
+
+$o=new TQuality;
+$o->init_db_by_vars($PDOdb);
