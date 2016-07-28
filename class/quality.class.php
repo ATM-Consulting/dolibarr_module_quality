@@ -48,7 +48,7 @@ class TC_quality extends TObjetStd {
 		$this->active = 1;
 	}
 	
-	static function getAll(&$PDOdb) {
+	static function getAll(&$PDOdb, $forCombo = false) {
 		
 		$Tmp = $PDOdb->ExecuteAsArray("SELECT rowid FROM ".MAIN_DB_PREFIX."c_quality WHERE active = 1");
 		$Tab=array();
@@ -57,7 +57,14 @@ class TC_quality extends TObjetStd {
 			$c=new TC_quality;
 			$c->load($PDOdb, $row->rowid);
 			
-			$Tab[] = $c;
+			if($forCombo) {
+				$Tab[$c->code] = $c->label;
+			}
+			else{
+				$Tab[] = $c;	
+			}
+			
+			
 			
 		}
 		
