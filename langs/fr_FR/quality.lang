@@ -11,3 +11,8 @@ Quality=Qualité
 Other=Autre
 
 DefineQualityUsage=Définir l'usage fait de ces quantités
+
+QualitySaveControlEvent=Contrôle enregistré
+QualityControl=Contrôle qualité
+QualityListControl=Liste
+QualityNewControl=Nouveau

@@ -36,3 +36,12 @@ if(empty($Tab)) {
 
 $o=new TQuality;
 $o->init_db_by_vars($PDOdb);
+
+$o=new TQualityControl;
+$o->init_db_by_vars($PDOdb);
+
+$o=new TQualityControlMultiple;
+$o->init_db_by_vars($PDOdb);
+
+$o=new TQualityControlAnswer;
+$o->init_db_by_vars($PDOdb);

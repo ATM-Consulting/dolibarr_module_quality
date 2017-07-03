@@ -33,6 +33,97 @@ class TQuality extends TObjetStd {
 
 }
 
+
+
+class TQualityControl extends TObjetStd
+{
+	static $TType=array( //TODO translate
+			'text'=>'Texte libre'
+			,'checkbox'=>'Réponse oui / non'
+			,'num'=> 'Réponse numérique'
+			,'checkboxmultiple'=>'Réponse multiple'
+			
+	);
+	
+	function __construct()
+	{
+		$this->set_table(MAIN_DB_PREFIX.'quality_control');
+		$this->TChamps = array();
+		$this->add_champs('label,type,question',array('type'=>'string'));
+		
+		$this->start();
+		
+		$this->setChild('TQualityControlMultiple','fk_control');
+		$this->setChild('TQualityControlAnswer','fk_control');
+		
+	}
+}
+
+class TQualityControlMultiple extends TObjetStd
+{
+	function __construct()
+	{
+		$this->set_table(MAIN_DB_PREFIX.'quality_control_multiple');
+		$this->TChamps = array();
+		$this->add_champs('fk_control',array('type'=>'integer', 'index'=>true));
+		$this->add_champs('value',array('type'=>'string'));
+		
+		$this->start();
+		
+	}
+	
+	function visu_select_control(&$PDOdb, $name)
+	{
+		$sql = 'SELECT rowid, label FROM '.MAIN_DB_PREFIX.'quality_control WHERE type = "checkboxmultiple"';
+		$resql = $PDOdb->Execute($sql);
+		
+		$res = '<select name="'.$name.'"><option value=""></option>';
+		
+		while($db->Get_line())
+		{
+			$fk_control = $db->Get_field('rowid');
+			$res.= '<option '.($this->fk_control == $fk_control ? 'selected="selected"' : '').' value="'.$fk_control.'">'.$db->Get_field('libelle').'</option>';
+		}
+		
+		$res.= '</select>';
+		
+		return $res;
+	}
+	
+}
+
+class TQualityControlAnswer extends TObjetStd
+{
+	function __construct()
+	{
+		$this->set_table(MAIN_DB_PREFIX.'quality_control_answer');
+		$this->TChamps = array();
+		$this->add_champs('fk_control',array('type'=>'integer', 'index'=>true));
+		$this->add_champs('response',array('type'=>'string'));
+		
+		$this->errors = array();
+		
+		$this->start();
+	}
+	
+	function save(&$PDOdb)
+	{
+		global $user,$langs,$conf,$db;
+		
+		parent::save($PDOdb);
+		
+	}
+	
+	function delete(&$PDOdb)
+	{
+		global $user,$langs,$conf,$db;
+		
+		
+		parent::delete($PDOdb);
+	}
+	
+}
+
 class TC_quality extends TObjetStd {
 	
 	function __construct() {
