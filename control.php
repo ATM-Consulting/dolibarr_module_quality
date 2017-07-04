@@ -67,12 +67,12 @@
 		case 'editValueConfirm':
 			$control->load($PDOdb, $id);
 								
-			$k=$control->addChild($PDOdb,'TAssetControlMultiple', __get('id_value', 0, 'int'));
-			$control->TAssetControlMultiple[$k]->fk_control = $control->getId();
-			$control->TAssetControlMultiple[$k]->value = __get('value');
+			$k=$control->addChild($PDOdb,'TQualityControlMultiple', __get('id_value', 0, 'int')); //TODO in class
+			$control->TQualityControlMultiple[$k]->fk_control = $control->getId();
+			$control->TQualityControlMultiple[$k]->value = __get('value');
 				
-			if ($control->TAssetControlMultiple[$k]->save($PDOdb)) setEventMessage($langs->trans('AssetMsgSaveControlValue'));
-			else setEventMessage($langs->trans('AssetErrSaveControlValue'));
+			if ($control->TQualityControlMultiple[$k]->save($PDOdb)) setEventMessage($langs->trans('QualityMsgSaveControlValue'));
+			else setEventMessage($langs->trans('QualityErrSaveControlValue'));
 			
 			_fiche($PDOdb, $control, 'view');
 			
@@ -81,7 +81,7 @@
 		case 'deleteValue':
 			$control->load($PDOdb, $id);
 			
-			if ($control->removeChild('TAssetControlMultiple', __get('id_value',0,'integer'))) 
+			if ($control->removeChild('TQualityControlMultiple', __get('id_value',0,'integer'))) //TODO in class 
 			{
 				$control->save($PDOdb);
 				setEventMessage($langs->trans('AssetMsgDeleteControlValue'));

@@ -92,13 +92,27 @@ class TQualityControlMultiple extends TObjetStd
 	
 }
 
+class TQualityControlSheet extends TObjetStd
+{
+	function __construct()
+	{
+		$this->set_table(MAIN_DB_PREFIX.'quality_control_sheet');
+		$this->add_champs('label,controls',array('type'=>'string'));
+		
+		$this->errors = array();
+		
+		$this->start();
+	}
+	
+}
 class TQualityControlAnswer extends TObjetStd
 {
 	function __construct()
 	{
 		$this->set_table(MAIN_DB_PREFIX.'quality_control_answer');
 		$this->TChamps = array();
-		$this->add_champs('fk_control',array('type'=>'integer', 'index'=>true));
+		$this->add_champs('fk_control,fk_object',array('type'=>'integer', 'index'=>true));
+		$this->add_champs('type_object',array('type'=>'string','length'=>50, 'index'=>true));
 		$this->add_champs('response',array('type'=>'string'));
 		
 		$this->errors = array();
@@ -106,6 +120,19 @@ class TQualityControlAnswer extends TObjetStd
 		$this->start();
 	}
 	
+	public function loadByObject(&$PDOdb,Int $fk_object, String $type_object) {
+		
+		$PDOdb->Execute("SELECT rowid FROM ".$this->get_table()." WHERE fk_object=".$fk_object." AND type_object='".$type_object."'" );
+		if($obj = $PDOdb->Get_line()) {
+			
+			return $this->load($PDOdb, $obj->rowid);
+			
+		}
+		
+		return false;
+		
+	}
+ 	
 	function save(&$PDOdb)
 	{
 		global $user,$langs,$conf,$db;
