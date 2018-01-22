@@ -141,7 +141,9 @@ class modQuality extends DolibarrModules
 		// 'stock'            to add a tab in stock view
 		// 'thirdparty'       to add a tab in third party view
 		// 'user'             to add a tab in user view
-        $this->tabs = array();
+        $this->tabs = array(
+        		'of:+quality:Qualité:quality@quality:$user->rights->quality->control->read:/quality/card.php?fk_of=__ID__'
+        );
 
         // Dictionaries
 	    if (! isset($conf->quality->enabled))

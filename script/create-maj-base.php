@@ -10,12 +10,13 @@ if(!defined('INC_FROM_DOLIBARR')) {
 
 }
 
+global $db;
 
 dol_include_once('/quality/class/quality.class.php');
 
 $PDOdb=new TPDOdb;
 
-$o=new TC_quality;
+$o=new TC_quality($db);
 $o->init_db_by_vars($PDOdb);
 
 $Tab = $PDOdb->ExecuteAsArray("SELECT * FROM ".MAIN_DB_PREFIX."c_quality");
@@ -34,14 +35,14 @@ if(empty($Tab)) {
 }
 
 
-$o=new TQuality;
+$o=new TQuality($db);
 $o->init_db_by_vars($PDOdb);
 
-$o=new TQualityControl;
+$o=new QualityControl($db);
 $o->init_db_by_vars($PDOdb);
 
-$o=new TQualityControlMultiple;
+$o=new QualityControlMultiple($db);
 $o->init_db_by_vars($PDOdb);
 
-$o=new TQualityControlAnswer;
+$o=new QualityControlAnswer($db);
 $o->init_db_by_vars($PDOdb);
