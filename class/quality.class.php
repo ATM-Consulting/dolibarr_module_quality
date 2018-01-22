@@ -98,7 +98,7 @@ class TQualityControlAnswer extends TObjetStd
 	{
 		$this->set_table(MAIN_DB_PREFIX.'quality_control_answer');
 		$this->TChamps = array();
-		$this->add_champs('fk_control',array('type'=>'integer', 'index'=>true));
+		$this->add_champs('fk_assetOf,fk_control',array('type'=>'integer', 'index'=>true));
 		$this->add_champs('response',array('type'=>'string'));
 		
 		$this->errors = array();

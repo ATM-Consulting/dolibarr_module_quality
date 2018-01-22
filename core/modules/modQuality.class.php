@@ -221,6 +221,20 @@ class modQuality extends DolibarrModules
 				'user'=>0);				// 0=Menu for internal users, 1=external users, 2=both
 		$r++;
 		
+		$this->menu[$r]=array(	'fk_menu'=>'fk_mainmenu=of,fk_leftmenu=assetControlList',			// Put 0 if this is a top menu
+				'type'=>'left',			// This is a Top menu entry
+				'titre'=>$langs->trans('QualityGroupControl'),
+				'mainmenu'=>'assetControlList',
+				'leftmenu'=>'assetNewControl',
+				'url'=>'/quality/group_control.php',
+				'position'=>303,
+				'perms'=>'$user->rights->quality->control->read',			// Use 'perms'=>'$user->rights->mymodule->level1->level2' if you want your menu with a permission rules
+				'langs'=>'quality@quality',
+				'enabled'=>'',
+				'target'=>'',
+				'user'=>0);				// 0=Menu for internal users, 1=external users, 2=both
+		$r++;
+		
 		$this->menu[$r]=array('fk_menu'=>'fk_mainmenu=of,fk_leftmenu=assetControlList',			// Put 0 if this is a top menu
 				'type'=>'left',			// This is a Top menu entry
 				'titre'=>$langs->trans('QualityNewControl'),
