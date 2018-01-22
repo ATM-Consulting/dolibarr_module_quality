@@ -17,3 +17,6 @@ QualitySaveControlEvent=Contrôle enregistré
 QualityControl=Contrôle qualité
 QualityListControl=Liste
 QualityNewControl=Nouveau
+
+QualityMsgSaveControlValue=Valeur de contrôle sauvegardée
+QualityControlSheet=Feuille de contrôle

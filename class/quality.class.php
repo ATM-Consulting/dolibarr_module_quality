@@ -223,6 +223,19 @@ class QualityControl extends SeedObject
 	
 }
 
+class TQualityControlSheet extends TObjetStd
+{
+	function __construct()
+	{
+		$this->set_table(MAIN_DB_PREFIX.'quality_control_sheet');
+		$this->add_champs('label,controls',array('type'=>'string'));
+		
+		$this->errors = array();
+		
+		$this->start();
+	}
+	
+}
 class QualityControlMultiple extends SeedObject
 {
 	
