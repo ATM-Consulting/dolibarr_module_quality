@@ -52,7 +52,7 @@ class modQuality extends DolibarrModules
 
 		// Family can be 'crm','financial','hr','projects','products','ecm','technic','other'
 		// It is used to group modules in module setup page
-		$this->family = "ATM";
+		$this->family = "GPAO";
 		// Module label (no space allowed), used if translation string 'ModuleXXXName' not found (where XXX is value of numeric property 'numero' of module)
 		$this->name = preg_replace('/^mod/i','',get_class($this));
 		// Module description, used if translation string 'ModuleXXXDesc' not found (where XXX is value of numeric property 'numero' of module)
@@ -141,7 +141,9 @@ class modQuality extends DolibarrModules
 		// 'stock'            to add a tab in stock view
 		// 'thirdparty'       to add a tab in third party view
 		// 'user'             to add a tab in user view
-        $this->tabs = array();
+        $this->tabs = array(
+        		'of:+quality:Qualité:quality@quality:$user->rights->quality->control->read:/quality/card.php?fk_of=__ID__'
+        );
 
         // Dictionaries
 	    if (! isset($conf->quality->enabled))
@@ -175,18 +177,95 @@ class modQuality extends DolibarrModules
 
 		// Add here list of permission defined by an id, a label, a boolean and two constant strings.
 		// Example:
-		// $this->rights[$r][0] = $this->numero . $r;	// Permission id (must not be already used)
-		// $this->rights[$r][1] = 'Permision label';	// Permission label
-		// $this->rights[$r][3] = 1; 					// Permission by default for new user (0/1)
-		// $this->rights[$r][4] = 'level1';				// In php code, permission will be checked by test if ($user->rights->permkey->level1->level2)
-		// $this->rights[$r][5] = 'level2';				// In php code, permission will be checked by test if ($user->rights->permkey->level1->level2)
-		// $r++;
-
-
+		$this->rights[$r][0] = $this->numero . $r;	// Permission id (must not be already used)
+		$this->rights[$r][1] = 'ReadControl';	// Permission label
+		$this->rights[$r][3] = 0; 					// Permission by default for new user (0/1)
+		$this->rights[$r][4] = 'control';				// In php code, permission will be checked by test if ($user->rights->permkey->level1->level2)
+		$this->rights[$r][5] = 'read';				// In php code, permission will be checked by test if ($user->rights->permkey->level1->level2)
+		$r++;
+		
+		$this->rights[$r][0] = $this->numero . $r;	// Permission id (must not be already used)
+		$this->rights[$r][1] = 'WriteControl';	// Permission label
+		$this->rights[$r][3] = 0; 					// Permission by default for new user (0/1)
+		$this->rights[$r][4] = 'control';				// In php code, permission will be checked by test if ($user->rights->permkey->level1->level2)
+		$this->rights[$r][5] = 'write';				// In php code, permission will be checked by test if ($user->rights->permkey->level1->level2)
+		$r++;
+		
+		
 		// Main menu entries
 		$this->menu = array();			// List of menus to add
 		$r=0;
-
+		$this->menu[$r]=array('fk_menu'=>'fk_mainmenu=of',			// Put 0 if this is a top menu
+				'type'=>'left',			// This is a Top menu entry
+				'titre'=>$langs->trans('QualityControl'),
+				'mainmenu'=>'of',
+				'leftmenu'=>'assetControlList',
+				'url'=>'/quality/list_control.php',
+				'position'=>302,
+				'perms'=>'$user->rights->quality->control->read',			// Use 'perms'=>'$user->rights->mymodule->level1->level2' if you want your menu with a permission rules
+				'enabled'=>'',
+				'langs'=>'quality@quality',
+				'target'=>'',
+				'user'=>0);				// 0=Menu for internal users, 1=external users, 2=both
+		$r++;
+		
+		$this->menu[$r]=array(	'fk_menu'=>'fk_mainmenu=of,fk_leftmenu=assetControlList',			// Put 0 if this is a top menu
+				'type'=>'left',			// This is a Top menu entry
+				'titre'=>$langs->trans('QualityListControl'),
+				'mainmenu'=>'of',
+				'leftmenu'=>'assetNewControl',
+				'url'=>'/quality/list_control.php',
+				'position'=>303,
+				'perms'=>'$user->rights->quality->control->read',			// Use 'perms'=>'$user->rights->mymodule->level1->level2' if you want your menu with a permission rules
+				'langs'=>'quality@quality',
+				'enabled'=>'',
+				'target'=>'',
+				'user'=>0);				// 0=Menu for internal users, 1=external users, 2=both
+		$r++;
+		
+		$this->menu[$r]=array(	'fk_menu'=>'fk_mainmenu=of,fk_leftmenu=assetControlList',			// Put 0 if this is a top menu
+				'type'=>'left',			// This is a Top menu entry
+				'titre'=>$langs->trans('QualityGroupControl'),
+				'mainmenu'=>'assetControlList',
+				'leftmenu'=>'assetNewControl',
+				'url'=>'/quality/group_control.php',
+				'position'=>303,
+				'perms'=>'$user->rights->quality->control->read',			// Use 'perms'=>'$user->rights->mymodule->level1->level2' if you want your menu with a permission rules
+				'langs'=>'quality@quality',
+				'enabled'=>'',
+				'target'=>'',
+				'user'=>0);				// 0=Menu for internal users, 1=external users, 2=both
+		$r++;
+		
+		$this->menu[$r]=array('fk_menu'=>'fk_mainmenu=of,fk_leftmenu=assetControlList',			// Put 0 if this is a top menu
+				'type'=>'left',			// This is a Top menu entry
+				'titre'=>$langs->trans('QualityNewControl'),
+				'mainmenu'=>'of',
+				'leftmenu'=>'assetNewControl',
+				'url'=>'/quality/control.php?action=new',
+				'position'=>304,
+				'enabled'=>'',
+				'langs'=>'quality@quality',
+				'perms'=>'$user->rights->quality->control->write',			// Use 'perms'=>'$user->rights->mymodule->level1->level2' if you want your menu with a permission rules
+				'target'=>'',
+				'user'=>0);				// 0=Menu for internal users, 1=external users, 2=both
+		$r++;
+		
+		/*$this->menu[$r]=array('fk_menu'=>'fk_mainmenu=of,fk_leftmenu=assetControlList',			// Put 0 if this is a top menu
+				'type'=>'left',			// This is a Top menu entry
+				'titre'=>$langs->trans('QualityControlSheet'),
+				'mainmenu'=>'of',
+				'leftmenu'=>'controlSheet',
+				'url'=>'/quality/sheet.php',
+				'position'=>305,
+				'enabled'=>'',
+				'langs'=>'quality@quality',
+				'perms'=>'$user->rights->quality->control->read',			// Use 'perms'=>'$user->rights->mymodule->level1->level2' if you want your menu with a permission rules
+				'target'=>'',
+				'user'=>0);				// 0=Menu for internal users, 1=external users, 2=both
+		$r++;*/
+		
+		
 		// Add here entries to declare new menus
 		//
 		// Example to declare a new Top Menu entry and its Left menu entry:
