@@ -51,6 +51,8 @@ class QualityControl extends SeedObject
 	
 	public $childtables=array('QualityControlMultiple','QualityControlAnswer');
 	
+	public $fk_element = 'fk_control';
+	
 	function __construct(&$db)
 	{
 		$this->db = $db;
