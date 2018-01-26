@@ -145,8 +145,10 @@ class QualityControl extends SeedObject
 				
 			case 'checkboxmultiple':
 				
+				global $db;
+				
 				$values = explode(',', $value);
-				$control = new TQualityControl($db);
+				$control = new QualityControl($db);
 				$control->fetch($fk_control);
 				
 				foreach ($control->TQualityControlMultiple as &$controlValue)
