@@ -27,5 +27,8 @@
 		exit;
 	}
 
-	
+	if(ABRICOT_VERSION<2.1) {
+		print $langs->trans('AbricotLastVersionRequire'). ' : <a href="http://wiki.atm-consulting.fr/index.php/Accueil#Abricot" target="_blank">Abricot</a>';
+                exit;
+	}
 

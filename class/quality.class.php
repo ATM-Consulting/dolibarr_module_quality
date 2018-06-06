@@ -51,6 +51,8 @@ class QualityControl extends SeedObject
 	
 	public $childtables=array('QualityControlMultiple','QualityControlAnswer');
 	
+	public $fk_element = 'fk_control';
+	
 	function __construct(&$db)
 	{
 		$this->db = $db;
@@ -143,8 +145,10 @@ class QualityControl extends SeedObject
 				
 			case 'checkboxmultiple':
 				
+				global $db;
+				
 				$values = explode(',', $value);
-				$control = new TQualityControl($db);
+				$control = new QualityControl($db);
 				$control->fetch($fk_control);
 				
 				foreach ($control->TQualityControlMultiple as &$controlValue)

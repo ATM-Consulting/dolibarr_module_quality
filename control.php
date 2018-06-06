@@ -10,46 +10,46 @@
 	
 	$action=__get('action','view');
 	$id = __get('id', 0);
-	$PDOdb=new TPDOdb;
-	$control=new TQualityControl;
+	
+	$control=new QualityControl($db);
 	
 
 	switch($action) {
 		case 'view':
 			if ($id <= 0) header('Location: '.dol_buildpath('/quality/list_control.php',1));
 		
-			$control->load($PDOdb, $id);
+			$control->fetch($id);
 			
-			_fiche($PDOdb, $control, 'view');
+			_fiche( $control, 'view');
 			
 			break;
 		
 		case 'new':
 			
-			_fiche($PDOdb, $control, 'edit');
+			_fiche( $control, 'edit');
 			
 			break;
 	
 		case 'edit':
-			$control->load($PDOdb, $id);
+			$control->fetch($id);
 			
-			_fiche($PDOdb, $control, 'edit');
+			_fiche( $control, 'edit');
 			
 			break;
 			
 		case 'save':
-			$control->load($PDOdb, $id);
-			$control->set_values($_REQUEST);
-			$control->save($PDOdb);
+			$control->fetch($id);
+			$control->setValues($_REQUEST);
+			$control->update($user);
 		
 			setEventMessage($langs->trans('QualitySaveControlEvent'));
 		
-			_fiche($PDOdb, $control, 'view');
+			_fiche( $control, 'view');
 			
 			break;
 		
 		case 'delete':				
-			$control->load($PDOdb, $id);
+			$control->fetch($id);
 			$control->delete($PDOdb);
 			
 			$_SESSION['AssetMsg'] = 'QualityDeleteControlEvent';
@@ -58,37 +58,36 @@
 			break;
 			
 		case 'editValue':
-			$control->load($PDOdb, $id);
+			$control->fetch($id);
 			
-			_fiche($PDOdb, $control, 'view', 1);	
+			_fiche( $control, 'view', 1);	
 			
 			break;
 			
 		case 'editValueConfirm':
-			$control->load($PDOdb, $id);
-								
-			$k=$control->addChild($PDOdb,'TQualityControlMultiple', __get('id_value', 0, 'int')); //TODO in class
-			$control->TQualityControlMultiple[$k]->fk_control = $control->getId();
+			$res = $control->fetch($id);
+					
+			$k=$control->addChild('QualityControlMultiple', __get('id_value', 0, 'int')); //TODO in class
+			$control->TQualityControlMultiple[$k]->fk_control = $control->id;
 			$control->TQualityControlMultiple[$k]->value = __get('value');
 				
-			if ($control->TQualityControlMultiple[$k]->save($PDOdb)) setEventMessage($langs->trans('QualityMsgSaveControlValue'));
+			if ($control->TQualityControlMultiple[$k]->update($user)) setEventMessage($langs->trans('QualityMsgSaveControlValue'));
 			else setEventMessage($langs->trans('QualityErrSaveControlValue'));
 			
-			_fiche($PDOdb, $control, 'view');
+			_fiche( $control, 'view');
 			
 			break;
 			
 		case 'deleteValue':
-			$control->load($PDOdb, $id);
+			$control->fetch($id);
 			
-			if ($control->removeChild('TQualityControlMultiple', __get('id_value',0,'integer'))) //TODO in class 
+			if ($control->removeChild($user, 'QualityControlMultiple', __get('id_value',0,'integer'))) //TODO in class 
 			{
-				$control->save($PDOdb);
 				setEventMessage($langs->trans('AssetMsgDeleteControlValue'));
 			}
 			else setEventMessage($langs->trans('AssetErrDeleteControlValue'));
 			
-			_fiche($PDOdb, $control, 'view');
+			_fiche( $control, 'view');
 			
 			break;
 
@@ -96,15 +95,15 @@
 		default:
 			if ($id <= 0) header('Location: '.DOL_MAIN_URL_ROOT.'/custom/asset/list_control.php');
 
-			$control->load($PDOdb, $id);
+			$control->fetch($id);
 			
-			_fiche($PDOdb, $control, 'view');
+			_fiche( $control, 'view');
 			
 			break;
 	}
 	
 
-function _fiche(&$PDOdb, &$control, $mode='view', $editValue=false) {
+function _fiche(&$control, $mode='view', $editValue=false) {
 	global $db,$langs;
 
 	llxHeader('',$langs->trans('AddControl'),'','');
@@ -114,14 +113,14 @@ function _fiche(&$PDOdb, &$control, $mode='view', $editValue=false) {
 	$formCore->Set_typeaff($mode);
 	
 	$TForm=array(
-			'id'=>$control->getId()
+			'id'=>$control->id
 			,'label'=>$formCore->texte('', 'label', $control->label,50,255)
-			,'type'=>$formCore->combo('', 'type', TQualityControl::$TType, $control->type)
+			,'type'=>$formCore->combo('', 'type', QualityControl::$TType, $control->type)
 			,'question'=>$formCore->texte('', 'question', $control->question,120,255)
 	);
 	
-	$TFormVal = _fiche_value($PDOdb, $editValue);
-	$TVal = _liste_valeur($PDOdb, $control->getId(), $control->type);
+	$TFormVal = _fiche_value( $editValue);
+	$TVal = _liste_valeur( $control->id, $control->type);
 	
 	print $TBS->render('./tpl/control.tpl.php', 
 		array(
@@ -145,8 +144,10 @@ function _fiche(&$PDOdb, &$control, $mode='view', $editValue=false) {
 	llxFooter();
 }
 
-function _fiche_value(&$PDOdb, $editValue)
+function _fiche_value( $editValue)
 {
+	global $db;
+	
 	$res = array();
 	
 	if (!$editValue) return $res;
@@ -156,8 +157,8 @@ function _fiche_value(&$PDOdb, $editValue)
 	
 	if ($id_value > 0)
 	{
-		$val = new TQualityControlMultiple;
-		$val->load($PDOdb, $id_value);
+		$val = new QualityControlMultiple($db);
+		$val->fetch( $id_value);
 		$res['value'] = $val->value;
 	}
 	else 
@@ -168,9 +169,9 @@ function _fiche_value(&$PDOdb, $editValue)
 	return $res;
 }
 
-function _liste_valeur(&$PDOdb, $fk_control, $type)
+function _liste_valeur( $fk_control, $type)
 {
-	global $langs;
+	global $langs,$db;
 	
 	$res = array();
 	
@@ -180,12 +181,16 @@ function _liste_valeur(&$PDOdb, $fk_control, $type)
 			FROM '.MAIN_DB_PREFIX.'quality_control_multiple cm
 			WHERE cm.fk_control = '.(int) $fk_control;
 	
-	$PDOdb->Execute($sql);
-	while ($PDOdb->Get_line())
+	$resql = $db->query($sql);
+	while ($obj = $db->fetch_object($resql))
 	{
 		$res[] = array(
-			'value' => $PDOdb->Get_field('value')
-			,'action' => '<a title="'.$langs->trans('Modify').'" href="?id='.(int) $fk_control.'&action=editValue&id_value='.(int)$PDOdb->Get_field('rowid').'">'.img_picto('','edit.png', '', 0).'</a>&nbsp;&nbsp;&nbsp;<a title="Supprimer" onclick="if (!window.confirm(\'Confirmez-vous la suppression ?\')) return false;" href="?id='.(int) $fk_control.'&action=deleteValue&id_value='.(int)$PDOdb->Get_field('rowid').'">'.img_picto('','delete.png', '', 0).'</a>'
+				'value' => $obj->value
+				,'action' => '<a title="'.$langs->trans('Modify').'" href="?id='.(int) $fk_control.'&action=editValue&id_value='.$obj->rowid.'">'
+							.img_picto('','edit.png', '', 0)
+						.'</a>&nbsp;&nbsp;&nbsp;
+					<a title="Supprimer" onclick="if (!window.confirm(\'Confirmez-vous la suppression ?\')) return false;" href="?id='
+				.(int) $fk_control.'&action=deleteValue&id_value='.(int)$obj->rowid.'">'.img_picto('','delete.png', '', 0).'</a>'
 		);
 	}
 

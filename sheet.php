@@ -39,6 +39,7 @@ function _card(&$sheet, $mode = 'view') {
 }
 
 function _list(&$PDOdb) {
+    global $langs;
 	
 	llxHeader('',$langs->trans('ListSheet'),'','');
 	

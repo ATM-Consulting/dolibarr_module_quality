@@ -22,7 +22,7 @@
 		}
 		
 		$form=new TFormCore;
-		$assetControl = new TQualityControl;
+		$assetControl = new QualityControl($db);
 		$l = new TListViewTBS('listControl');
 	
 		$sql = 'SELECT rowid as id, label, type, question FROM '.MAIN_DB_PREFIX.'quality_control';
@@ -58,7 +58,7 @@
 					,'action'=>$langs->trans('Action')
 			)
 			,'eval'=>array(
-				'type'=>'TQualityControl::$TType["@val@"]'
+				'type'=>'QualityControl::$TType["@val@"]'
 			)
 		));
 		
