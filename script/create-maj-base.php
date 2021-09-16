@@ -47,3 +47,6 @@ $o->init_db_by_vars($PDOdb);
 $o=new QualityControlAnswer($db);
 $o->init_db_by_vars($PDOdb);
 
+$o=new TQualityControlSheet($db);
+$o->init_db_by_vars($PDOdb);
+
