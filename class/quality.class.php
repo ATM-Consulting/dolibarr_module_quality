@@ -208,9 +208,10 @@ class QualityControl extends SeedObject
 					
 				case 'checkboxmultiple': //TODO debug
 					$res2 = '';
+					$checked_values = explode(',', $controlAnswer->response);
 					foreach ($control->TQualityControlMultiple as $controlVal)
 					{
-						$res2 .= $controlVal->value.', ';
+						if(in_array($controlVal->id, $checked_values)) $res2 .= $controlVal->value.', ';
 					}
 					
 					$Tab[] = array(

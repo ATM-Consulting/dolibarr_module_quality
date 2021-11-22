@@ -47,6 +47,8 @@ class modQuality extends DolibarrModules
 		// Id for module (must be unique).
 		// Use here a free id (See in Home -> System information -> Dolibarr for list of used modules id).
 		$this->numero = 104023; // 104000 to 104999 for ATM CONSULTING
+		$this->editor_name = 'ATM Consulting';
+		$this->editor_url = 'https://www.atm-consulting.fr';
 		// Key text used to identify module (for permissions, menus, etc...)
 		$this->rights_class = 'quality';
 
@@ -58,7 +60,7 @@ class modQuality extends DolibarrModules
 		// Module description, used if translation string 'ModuleXXXDesc' not found (where XXX is value of numeric property 'numero' of module)
 		$this->description = "Description of module Quality";
 		// Possible values for version are: 'development', 'experimental', 'dolibarr' or version
-		$this->version = '1.0';
+		$this->version = '1.1.0';
 		// Key used in llx_const table to save module status enabled/disabled (where MYMODULE is value of property name of module in uppercase)
 		$this->const_name = 'MAIN_MODULE_'.strtoupper($this->name);
 		// Where to store the module in setup page (0=common,1=interface,2=others,3=very specific)
@@ -91,7 +93,7 @@ class modQuality extends DolibarrModules
 			'hooks'=>array('ofcard')
 			,'css'=>array('/quality/css/quality.css')
 			,'js'=>array('/quality/js/quality.js.php')
-			
+
 		);
 
 		// Data directories to create when module is enabled.
@@ -151,7 +153,7 @@ class modQuality extends DolibarrModules
         	$conf->quality=new stdClass();
         	$conf->quality->enabled=0;
         }
-		
+
 		$this->dictionaries=array(
             'langs'=>'quality@quality',
             'tabname'=>array(MAIN_DB_PREFIX."c_quality"),		// List of tables we want to see into dictonnary editor
@@ -164,7 +166,7 @@ class modQuality extends DolibarrModules
             'tabrowid'=>array("rowid"),																									// Name of columns with primary key (try to always name it 'rowid')
             'tabcond'=>array($conf->quality->enabled)												// Condition to show each dictionary
         );
-        
+
         // Boxes
 		// Add here list of php file(s) stored in core/boxes that contains class to show a box.
         $this->boxes = array();			// List of boxes
@@ -183,15 +185,15 @@ class modQuality extends DolibarrModules
 		$this->rights[$r][4] = 'control';				// In php code, permission will be checked by test if ($user->rights->permkey->level1->level2)
 		$this->rights[$r][5] = 'read';				// In php code, permission will be checked by test if ($user->rights->permkey->level1->level2)
 		$r++;
-		
+
 		$this->rights[$r][0] = $this->numero . $r;	// Permission id (must not be already used)
 		$this->rights[$r][1] = 'WriteControl';	// Permission label
 		$this->rights[$r][3] = 0; 					// Permission by default for new user (0/1)
 		$this->rights[$r][4] = 'control';				// In php code, permission will be checked by test if ($user->rights->permkey->level1->level2)
 		$this->rights[$r][5] = 'write';				// In php code, permission will be checked by test if ($user->rights->permkey->level1->level2)
 		$r++;
-		
-		
+
+
 		// Main menu entries
 		$this->menu = array();			// List of menus to add
 		$r=0;
@@ -208,7 +210,7 @@ class modQuality extends DolibarrModules
 				'target'=>'',
 				'user'=>0);				// 0=Menu for internal users, 1=external users, 2=both
 		$r++;
-		
+
 		$this->menu[$r]=array(	'fk_menu'=>'fk_mainmenu=of,fk_leftmenu=assetControlList',			// Put 0 if this is a top menu
 				'type'=>'left',			// This is a Top menu entry
 				'titre'=>$langs->trans('QualityListControl'),
@@ -222,7 +224,7 @@ class modQuality extends DolibarrModules
 				'target'=>'',
 				'user'=>0);				// 0=Menu for internal users, 1=external users, 2=both
 		$r++;
-		
+
 		$this->menu[$r]=array(	'fk_menu'=>'fk_mainmenu=of,fk_leftmenu=assetControlList',			// Put 0 if this is a top menu
 				'type'=>'left',			// This is a Top menu entry
 				'titre'=>$langs->trans('QualityGroupControl'),
@@ -236,7 +238,7 @@ class modQuality extends DolibarrModules
 				'target'=>'',
 				'user'=>0);				// 0=Menu for internal users, 1=external users, 2=both
 		$r++;
-		
+
 		$this->menu[$r]=array('fk_menu'=>'fk_mainmenu=of,fk_leftmenu=assetControlList',			// Put 0 if this is a top menu
 				'type'=>'left',			// This is a Top menu entry
 				'titre'=>$langs->trans('QualityNewControl'),
@@ -250,7 +252,7 @@ class modQuality extends DolibarrModules
 				'target'=>'',
 				'user'=>0);				// 0=Menu for internal users, 1=external users, 2=both
 		$r++;
-		
+
 		/*$this->menu[$r]=array('fk_menu'=>'fk_mainmenu=of,fk_leftmenu=assetControlList',			// Put 0 if this is a top menu
 				'type'=>'left',			// This is a Top menu entry
 				'titre'=>$langs->trans('QualityControlSheet'),
@@ -264,8 +266,8 @@ class modQuality extends DolibarrModules
 				'target'=>'',
 				'user'=>0);				// 0=Menu for internal users, 1=external users, 2=both
 		$r++;*/
-		
-		
+
+
 		// Add here entries to declare new menus
 		//
 		// Example to declare a new Top Menu entry and its Left menu entry:
@@ -328,7 +330,7 @@ class modQuality extends DolibarrModules
 	function init($options='')
 	{
 		$sql = array();
-		
+
 		define('INC_FROM_DOLIBARR',true);
 
 		dol_include_once('/quality/config.php');
